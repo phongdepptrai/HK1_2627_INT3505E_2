@@ -22,10 +22,14 @@ HK1_2627_INT3505E_2/
 │   └── appB6.py                       # Bài 6: Full CRUD quản lý sách
 │
 ├── B2/                                # Lab 2: Chuẩn hóa RESTful API, Phân trang & HATEOAS
-    ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 2
-    ├── appB1.py                       # Bài 1: List & Create (GET/POST với Location header)
-    ├── appB2.py                       # Bài 2: PUT (thay thế) vs PATCH (cập nhật) & DELETE
-    └── appB3.py                       # Bài 3: Phân trang nâng cao, Lọc & HATEOAS links
+│   ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 2
+│   ├── appB1.py                       # Bài 1: List & Create (GET/POST với Location header)
+│   ├── appB2.py                       # Bài 2: PUT (thay thế) vs PATCH (cập nhật) & DELETE
+│   └── appB3.py                       # Bài 3: Phân trang nâng cao, Lọc & HATEOAS links
+│
+└── B3/                                # Lab 3: Thiết kế API Nền tảng Blog đơn giản
+    ├── README.md                      # Phân tích, thiết kế cây endpoint & tài liệu Lab 3
+    └── appB1.py                       # Triển khai Flask routes cho collection /posts
 ```
 
 ---
@@ -36,6 +40,7 @@ HK1_2627_INT3505E_2/
 | :--- | :--- | :--- | :--- |
 | [**B1**](./B1) | **Nhập môn RESTful API** | Routing, HTTP Methods (`GET`, `POST`, `PUT`, `DELETE`), Status Codes (`200`, `201`, `204`, `400`, `404`, `409`), UUID generation. | [Xem README Lab 1](./B1/README.md) |
 | [**B2**](./B2) | **Chuẩn hóa API & HATEOAS** | Chuẩn RESTful, phân biệt `PUT` (Full replacement) và `PATCH` (Partial update), Header `Location` & `Cache-Control`, Pagination (`page`, `size`), HATEOAS (`_links`). | [Xem README Lab 2](./B2/README.md) |
+| [**B3**](./B3) | **Thiết kế API Blog đơn giản** | Phân loại Collection / Item / Sub-resource, sơ đồ cây Endpoint, URI versioning (`/api/v1`), CRUD `/posts`. | [Xem README Lab 3](./B3/README.md) |
 
 ---
 
