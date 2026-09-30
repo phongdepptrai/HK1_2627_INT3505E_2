@@ -1,33 +1,27 @@
-# Lab 3: Thiết kế RESTful API - Nền tảng Blog đơn giản
+# Lab 3: Thiết kế cấu trúc RESTful API & Chuẩn hóa Error Handler
 
-Tài liệu thiết kế cấu trúc RESTful API hoàn chỉnh cho nền tảng blog đơn giản và mã nguồn triển khai mẫu cho tài nguyên `/posts`.
+Thực hành thiết kế kiến trúc RESTful API cho nền tảng Blog, phân loại tài nguyên (Collection, Item, Sub-resource), xây dựng cây endpoint với URI versioning và chuẩn hóa phản hồi lỗi theo đặc tả RFC 7807 (`application/problem+json`).
 
 ---
 
-## 1. Xác định resources trong miền (Domain Resources)
+## 1. Bài 1: Thiết kế API Nền tảng Blog đơn giản & Triển khai Collection `/posts`
+- **Tập tin**: [`appB1.py`](./appB1.py)
 
+### 1.1. Xác định resources trong miền (Domain Resources)
 Dựa vào bài toán thực tế của nền tảng blog, các tài nguyên (resources) cốt lõi bao gồm:
-
-1. **User (`users`)**: Người dùng của hệ thống (có thể là tác giả viết bài hoặc độc giả tương tác).
-2. **Profile (`profiles`)**: Hồ sơ cá nhân của người dùng (tiểu sử/bio, ảnh đại diện/avatar, liên kết cá nhân,...).
-3. **Post (`posts`)**: Bài viết do người dùng đăng tải (tiêu đề, nội dung, ngày tạo, tác giả).
-4. **Comment (`comments`)**: Bình luận của người dùng trên từng bài viết cụ thể.
-5. **Tag (`tags`)**: Thẻ phân loại/chủ đề gắn vào bài viết để dễ dàng tìm kiếm và nhóm nội dung.
+1. **User (`users`)**: Tài khoản người dùng (tác giả viết bài hoặc độc giả tương tác).
+2. **Profile (`profiles`)**: Hồ sơ cá nhân của người dùng (tiểu sử/bio, ảnh đại diện/avatar, liên kết,...).
+3. **Post (`posts`)**: Bài viết do người dùng đăng tải (tiêu đề, nội dung, tác giả, thẻ,...).
+4. **Comment (`comments`)**: Bình luận của người dùng trên bài viết.
+5. **Tag (`tags`)**: Thẻ phân loại bài viết theo chủ đề để tìm kiếm và nhóm nội dung.
 6. **Follow (`followers` / `following`)**: Mối quan hệ theo dõi giữa người dùng và tác giả khác.
 
----
-
-## 2. Phân loại Collection / Item / Sub-resource
-
-Trong thiết kế RESTful API:
-- **Collection**: Tập hợp danh sách các tài nguyên cùng loại.
-- **Item**: Một tài nguyên cụ thể đơn lẻ (thường xác định bởi `{id}`).
-- **Sub-resource**: Tài nguyên phụ thuộc, nằm trong ngữ cảnh của một tài nguyên cha.
+### 1.2. Phân loại Collection / Item / Sub-resource
 
 | Loại tài nguyên | Endpoint URI mẫu | Ý nghĩa / Mô tả |
 | :--- | :--- | :--- |
-| **Collection** | `/users` | Danh sách toàn bộ người dùng |
-| **Item** | `/users/{user_id}` | Thông tin chi tiết một người dùng cụ thể |
+| **Collection** | `/users` | Danh sách toàn bộ tài khoản người dùng |
+| **Item** | `/users/{user_id}` | Thông tin chi tiết một tài khoản người dùng |
 | **Sub-resource (Item)** | `/users/{user_id}/profile` | Hồ sơ cá nhân của người dùng `{user_id}` |
 | **Collection** | `/posts` | Danh sách toàn bộ bài viết |
 | **Item** | `/posts/{post_id}` | Chi tiết một bài viết cụ thể |
@@ -37,23 +31,14 @@ Trong thiết kế RESTful API:
 | **Item** | `/tags/{tag_id}` | Chi tiết một thẻ cụ thể |
 | **Sub-resource (Collection)** | `/posts/{post_id}/tags` | Danh sách thẻ gắn vào bài viết `{post_id}` |
 | **Sub-resource (Item)** | `/posts/{post_id}/tags/{tag_id}` | Một thẻ cụ thể được gắn vào bài viết `{post_id}` |
-| **Sub-resource (Collection)** | `/users/{user_id}/followers` | Danh sách người đang theo dõi `{user_id}` |
-| **Sub-resource (Collection)** | `/users/{user_id}/following` | Danh sách các tác giả mà `{user_id}` đang theo dõi |
+| **Sub-resource (Collection)** | `/users/{user_id}/followers` | Danh sách người đang theo dõi tài khoản này |
+| **Sub-resource (Collection)** | `/users/{user_id}/following` | Danh sách tài khoản mà user này đang theo dõi |
 | **Sub-resource (Item)** | `/users/{user_id}/following/{target_user_id}` | Trạng thái theo dõi giữa `{user_id}` và `{target_user_id}` |
 
----
+### 1.3. Sơ đồ cây endpoint & Quyết định version segment
 
-## 3. Sơ đồ cây endpoint và Quyết định version segment
-
-### 3.1. Quyết định Version Segment
-
-- **Lựa chọn**: Sử dụng **URI Path Versioning** với tiền tố `/api/v1` (ví dụ: `/api/v1/posts`).
-- **Lý do lựa chọn**:
-  - **Rõ ràng, trực quan**: Phiên bản hiển thị trực tiếp trên đường dẫn, dễ đọc hiểu cho người dùng và lập trình viên.
-  - **Dễ định tuyến**: Thuận tiện cho các bộ cân bằng tải hoặc API Gateway (Nginx, Kong) phân luồng sang các phiên bản dịch vụ backend khác nhau.
-  - **Dễ kiểm thử và tài liệu hóa**: Dễ dàng gọi qua lệnh `curl`, trình duyệt hoặc Swagger UI mà không cần can thiệp tùy biến header phức tạp.
-
-### 3.2. Sơ đồ cây endpoint (Endpoint Tree)
+- **Quyết định Version Segment**: Sử dụng **URI Path Versioning** với tiền tố `/api/v1` (ví dụ: `/api/v1/posts`) vì tính trực quan, dễ nhận biết phiên bản, hỗ trợ định tuyến API Gateway tốt và dễ kiểm thử qua browser / curl.
+- **Sơ đồ cây endpoint (Endpoint Tree)**:
 
 ```text
 /api/v1
@@ -106,17 +91,36 @@ Trong thiết kế RESTful API:
         └── DELETE                   # Xóa thẻ
 ```
 
+### 1.4. Triển khai Flask routes cho collection `/posts`
+Các endpoint được cài đặt trong [`appB1.py`](./appB1.py):
+- `GET /posts`: Lấy danh sách bài viết (hỗ trợ lọc theo `tag`).
+- `POST /posts`: Tạo bài viết mới (`201 Created` kèm header `Location: /posts/<id>`, kiểm tra định dạng JSON `415`, validation thiếu trường `422`).
+- `GET /posts/<int:post_id>`: Xem chi tiết một bài viết (`200 OK` hoặc `404 Not Found`).
+- `PUT /posts/<int:post_id>`: Cập nhật thay thế toàn bộ bài viết (`200 OK`, `422`, `404`).
+- `PATCH /posts/<int:post_id>`: Cập nhật một phần bài viết (`200 OK`, `404`).
+- `DELETE /posts/<int:post_id>`: Xóa bài viết (`204 No Content` body rỗng, `404`).
+
 ---
 
-## 4. Triển khai Flask routes cho collection `/posts`
+## 2. Bài 2: Error Handler trả về Problem Details (RFC 7807 problem+json)
+- **Tập tin**: [`appB2.py`](./appB2.py)
+- **Mục tiêu**: Viết Flask error handler thống nhất trả về chuẩn `application/problem+json`, kèm exception class tùy biến.
+- **Các thành phần cốt lõi**:
+  - `ProblemError(Exception)`: Lớp ngoại lệ tùy biến lưu trữ `status`, `title`, `detail`.
+  - `@app.errorhandler(ProblemError)`: Xử lý lỗi nghiệp vụ và trả về phản hồi định dạng `application/problem+json`.
+  - `@app.errorhandler(HTTPException)`: Fallback handler cho các ngoại lệ chuẩn của Flask/Werkzeug (như 404, 405,...).
+  - `@app.errorhandler(Exception)`: Fallback handler cho ngoại lệ 500 chưa được bắt, trả về thông điệp trung tính, bảo mật không lộ stack trace cho client và ghi log chi tiết phía server.
 
-Tập tin triển khai: [`appB1.py`](./appB1.py)
+### Kết quả thực thi
 
-Mã nguồn được viết ngắn gọn, chuẩn RESTful, xử lý đầy đủ các mã trạng thái HTTP chuẩn:
-- `200 OK`: Truy vấn hoặc cập nhật thành công.
-- `201 Created`: Tạo bài viết mới thành công kèm header `Location: /posts/<id>`.
-- `204 No Content`: Xóa bài viết thành công (body rỗng).
-- `404 Not Found`: Không tìm thấy bài viết theo `id`.
-- `415 Unsupported Media Type`: Khi request body không phải định dạng JSON.
-- `422 Unprocessable Entity`: Khi thiếu các trường dữ liệu bắt buộc (`title`, `content`, `author_id`).
+*1. Request tới tài nguyên không tồn tại `/resources/999` (HTTP 404 Problem Details):*
+![Bài 2 - 404 ProblemError](image-1.png)
 
+*2. Client gửi header `Accept: application/json` vẫn nhận về `application/problem+json`:*
+![Bài 2 - Accept JSON ProblemError](image-2.png)
+
+*3. Ngoại lệ server chưa bắt `/crash` trả về HTTP 500 trung tính (không lộ stack trace):*
+![Bài 2 - 500 Server Error](image-3.png)
+
+*4. Fallback handler bắt lỗi HTTPException chuẩn (`/not-found`):*
+![Bài 2 - Fallback HTTPException](image-4.png)

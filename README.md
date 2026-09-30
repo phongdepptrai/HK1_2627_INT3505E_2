@@ -29,7 +29,8 @@ HK1_2627_INT3505E_2/
 │
 └── B3/                                # Lab 3: Thiết kế API Nền tảng Blog đơn giản
     ├── README.md                      # Phân tích, thiết kế cây endpoint & tài liệu Lab 3
-    └── appB1.py                       # Triển khai Flask routes cho collection /posts
+    ├── appB1.py                       # Bài 1: Triển khai Flask routes cho collection /posts
+    └── appB2.py                       # Bài 2: Error handler trả về application/problem+json
 ```
 
 ---
