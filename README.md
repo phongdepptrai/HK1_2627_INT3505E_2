@@ -27,10 +27,11 @@ HK1_2627_INT3505E_2/
 │   ├── appB2.py                       # Bài 2: PUT (thay thế) vs PATCH (cập nhật) & DELETE
 │   └── appB3.py                       # Bài 3: Phân trang nâng cao, Lọc & HATEOAS links
 │
-└── B3/                                # Lab 3: Thiết kế API Nền tảng Blog đơn giản
+└── B3/                                # Lab 3: Thiết kế API & Phân trang Cursor
     ├── README.md                      # Phân tích, thiết kế cây endpoint & tài liệu Lab 3
     ├── appB1.py                       # Bài 1: Triển khai Flask routes cho collection /posts
-    └── appB2.py                       # Bài 2: Error handler trả về application/problem+json
+    ├── appB2.py                       # Bài 2: Error handler trả về application/problem+json
+    └── appB3.py                       # Bài 3: Triển khai /orders có cursor pagination, filter, sort & sparse fieldsets
 ```
 
 ---
@@ -41,7 +42,7 @@ HK1_2627_INT3505E_2/
 | :--- | :--- | :--- | :--- |
 | [**B1**](./B1) | **Nhập môn RESTful API** | Routing, HTTP Methods (`GET`, `POST`, `PUT`, `DELETE`), Status Codes (`200`, `201`, `204`, `400`, `404`, `409`), UUID generation. | [Xem README Lab 1](./B1/README.md) |
 | [**B2**](./B2) | **Chuẩn hóa API & HATEOAS** | Chuẩn RESTful, phân biệt `PUT` (Full replacement) và `PATCH` (Partial update), Header `Location` & `Cache-Control`, Pagination (`page`, `size`), HATEOAS (`_links`). | [Xem README Lab 2](./B2/README.md) |
-| [**B3**](./B3) | **Thiết kế API Blog đơn giản** | Phân loại Collection / Item / Sub-resource, sơ đồ cây Endpoint, URI versioning (`/api/v1`), CRUD `/posts`. | [Xem README Lab 3](./B3/README.md) |
+| [**B3**](./B3) | **Thiết kế API & Cursor Pagination** | Phân loại Collection / Item / Sub-resource, RFC 7807 (`problem+json`), Cursor pagination, Filter, Sort, Sparse fieldsets. | [Xem README Lab 3](./B3/README.md) |
 
 ---
 

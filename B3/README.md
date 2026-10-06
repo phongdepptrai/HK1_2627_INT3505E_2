@@ -124,3 +124,35 @@ Các endpoint được cài đặt trong [`appB1.py`](./appB1.py):
 
 *4. Fallback handler bắt lỗi HTTPException chuẩn (`/not-found`):*
 ![Bài 2 - Fallback HTTPException](image-4.png)
+
+---
+
+## 3. Bài 3: Triển khai `/orders` với Cursor Pagination, Lọc, Sắp xếp & Sparse Fieldsets
+- **Tập tin**: [`appB3.py`](./appB3.py)
+- **Mục tiêu**: Xây dựng endpoint `GET /orders` hoàn chỉnh đáp ứng đầy đủ 4 tiêu chí kiến trúc RESTful:
+  1. **Cursor Pagination**: Phân trang theo con trỏ (opaque token mã hóa base64 URL-safe), hỗ trợ tham số `limit` (mặc định 10, tối đa 100), trả về `next_cursor` và `has_more`. Kiểm tra tính hợp lệ của cursor, phát hiện cursor hỏng/sai định dạng để trả về HTTP `400 Bad Request` theo chuẩn RFC 7807 (`application/problem+json`).
+  2. **Filtering**: Hỗ trợ lọc theo `status` (ví dụ: `status=paid`) và `customer_id` (ví dụ: `customer_id=101`).
+  3. **Sorting**: Hỗ trợ sắp xếp linh hoạt theo trường và thứ tự qua tham số `sort` (ví dụ: `sort=-total`, `sort=total:desc`, `sort=created_at`,...) với cơ chế deterministic tie-breaker theo `id` để đảm bảo thứ tự phân trang ổn định.
+  4. **Sparse Fieldsets**: Cho phép client chỉ lấy các trường cần thiết qua tham số `fields` (ví dụ: `fields=id,total`), tối ưu hóa dung lượng truyền tải mạng.
+  5. **HATEOAS Navigation**: Tự động sinh liên kết `_links` (`self`, `next`) bảo toàn các query parameters của request.
+
+### Kết quả thực thi
+
+*1. Lọc đơn hàng theo trạng thái `status=paid`:*
+![Bài 3 - Filter status paid](image-5.png)
+
+*2. Phân trang theo cursor với kích thước trang `limit=5` (nhận về `next_cursor`):*
+![Bài 3 - Cursor Pagination limit 5](image-6.png)
+
+*3. Lấy trường chọn lọc (Sparse Fieldsets) `fields=id,total`:*
+![Bài 3 - Sparse Fieldsets](image-7.png)
+
+*4. Kiểm tra xử lý cursor hỏng/không hợp lệ trả về HTTP 400 Problem Details:*
+![Bài 3 - Broken Cursor 400](image-8.png)
+
+*5. Truy vấn trang tiếp theo sử dụng `cursor` nhận được từ trang trước:*
+![Bài 3 - Cursor Next Page](image-9.png)
+
+*6. Sắp xếp đơn hàng giảm dần theo tổng tiền `sort=-total`:*
+![Bài 3 - Sort by total desc](image-10.png)
+
