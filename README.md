@@ -27,11 +27,16 @@ HK1_2627_INT3505E_2/
 │   ├── appB2.py                       # Bài 2: PUT (thay thế) vs PATCH (cập nhật) & DELETE
 │   └── appB3.py                       # Bài 3: Phân trang nâng cao, Lọc & HATEOAS links
 │
-└── B3/                                # Lab 3: Thiết kế API & Phân trang Cursor
-    ├── README.md                      # Phân tích, thiết kế cây endpoint & tài liệu Lab 3
-    ├── appB1.py                       # Bài 1: Triển khai Flask routes cho collection /posts
-    ├── appB2.py                       # Bài 2: Error handler trả về application/problem+json
-    └── appB3.py                       # Bài 3: Triển khai /orders có cursor pagination, filter, sort & sparse fieldsets
+├── B3/                                # Lab 3: Thiết kế API & Phân trang Cursor
+│   ├── README.md                      # Phân tích, thiết kế cây endpoint & tài liệu Lab 3
+│   ├── appB1.py                       # Bài 1: Triển khai Flask routes cho collection /posts
+│   ├── appB2.py                       # Bài 2: Error handler trả về application/problem+json
+│   └── appB3.py                       # Bài 3: Triển khai /orders có cursor pagination, filter, sort & sparse fieldsets
+│
+└── B4/                                # Lab 4: Đặc tả RESTful API với OpenAPI Specification (OAS 3.0)
+    ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 4
+    ├── appB1.yaml                     # Đặc tả chuẩn OpenAPI 3.0.3 cho Pet Store API
+    └── appB1.py                       # Bài 1: Cài đặt Flask API cho Pet Store chuẩn hóa theo OAS
 ```
 
 ---
@@ -43,6 +48,7 @@ HK1_2627_INT3505E_2/
 | [**B1**](./B1) | **Nhập môn RESTful API** | Routing, HTTP Methods (`GET`, `POST`, `PUT`, `DELETE`), Status Codes (`200`, `201`, `204`, `400`, `404`, `409`), UUID generation. | [Xem README Lab 1](./B1/README.md) |
 | [**B2**](./B2) | **Chuẩn hóa API & HATEOAS** | Chuẩn RESTful, phân biệt `PUT` (Full replacement) và `PATCH` (Partial update), Header `Location` & `Cache-Control`, Pagination (`page`, `size`), HATEOAS (`_links`). | [Xem README Lab 2](./B2/README.md) |
 | [**B3**](./B3) | **Thiết kế API & Cursor Pagination** | Phân loại Collection / Item / Sub-resource, RFC 7807 (`problem+json`), Cursor pagination, Filter, Sort, Sparse fieldsets. | [Xem README Lab 3](./B3/README.md) |
+| [**B4**](./B4) | **Đặc tả OpenAPI & Pet Store API** | Chuẩn OpenAPI 3.0.3, Schema reuse (`$ref`), `operationId`, error handling, security (`bearerAuth`), pagination (`limit`, `x-next`), CRUD Pet Store. | [Xem README Lab 4](./B4/README.md) |
 
 ---
 
@@ -72,6 +78,16 @@ python B1/appB6.py
 #### Chạy bài trong Lab 2:
 ```powershell
 python B2/appB3.py
+```
+
+#### Chạy bài trong Lab 3:
+```powershell
+python B3/appB3.py
+```
+
+#### Chạy bài trong Lab 4:
+```powershell
+python B4/appB1.py
 ```
 
 ---
@@ -107,3 +123,5 @@ curl.exe -i -X DELETE http://localhost:5000/books/1
 Mỗi thư mục lab đều đi kèm tài liệu hướng dẫn và bằng chứng chạy console chi tiết:
 - [Tài liệu và hình ảnh Lab 1 (B1)](./B1/README.md)
 - [Tài liệu và hình ảnh Lab 2 (B2)](./B2/README.md)
+- [Tài liệu và hình ảnh Lab 3 (B3)](./B3/README.md)
+- [Tài liệu và hình ảnh Lab 4 (B4)](./B4/README.md)
