@@ -37,6 +37,16 @@ HK1_2627_INT3505E_2/
     ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 4
     ├── appB1.yaml                     # Đặc tả chuẩn OpenAPI 3.0.3 cho Pet Store API
     └── appB1.py                       # Bài 1: Cài đặt Flask API cho Pet Store chuẩn hóa theo OAS
+
+└── B5/                                # Lab 5: Phân trang nâng cao (Offset & Composite Cursor), Lọc & Sắp xếp đa khóa
+    ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 5
+    ├── app.py                         # File khởi tạo Flask, SQLite DB, seed dữ liệu mẫu
+    ├── appB1.py                       # Entry point chạy ứng dụng (python B5/appB1.py)
+    ├── models.py                      # Mô hình cơ sở dữ liệu SQLAlchemy (Book, Author, Category, User, Review)
+    ├── routes/
+    │   └── books.py                   # Endpoint GET /api/v1/books hỗ trợ offset/cursor, filter, multi-key sort
+    └── schemas/
+        └── book.json                  # JSON Schema đặc tả thực thể Book (Draft 2020-12)
 ```
 
 ---
@@ -49,6 +59,7 @@ HK1_2627_INT3505E_2/
 | [**B2**](./B2) | **Chuẩn hóa API & HATEOAS** | Chuẩn RESTful, phân biệt `PUT` (Full replacement) và `PATCH` (Partial update), Header `Location` & `Cache-Control`, Pagination (`page`, `size`), HATEOAS (`_links`). | [Xem README Lab 2](./B2/README.md) |
 | [**B3**](./B3) | **Thiết kế API & Cursor Pagination** | Phân loại Collection / Item / Sub-resource, RFC 7807 (`problem+json`), Cursor pagination, Filter, Sort, Sparse fieldsets. | [Xem README Lab 3](./B3/README.md) |
 | [**B4**](./B4) | **Đặc tả OpenAPI & Pet Store API** | Chuẩn OpenAPI 3.0.3, Schema reuse (`$ref`), `operationId`, error handling, security (`bearerAuth`), pagination (`limit`, `x-next`), CRUD Pet Store. | [Xem README Lab 4](./B4/README.md) |
+| [**B5**](./B5) | **Phân trang nâng cao & Sắp xếp** | Song song Offset & Cursor (Composite), Lọc Category (`genre`), Multi-key Sorting, Whitelist bảo mật. | [Xem README Lab 5](./B5/README.md) |
 
 ---
 
@@ -61,9 +72,9 @@ Mở PowerShell tại thư mục gốc của dự án:
 .\.venv\Scripts\Activate.ps1
 ```
 
-*(Nếu chưa cài thư viện Flask):*
+*(Nếu chưa cài thư viện Flask và Flask-SQLAlchemy):*
 ```powershell
-pip install Flask
+pip install Flask Flask-SQLAlchemy
 ```
 
 ---
@@ -90,6 +101,11 @@ python B3/appB3.py
 python B4/appB1.py
 ```
 
+#### Chạy bài trong Lab 5:
+```powershell
+python B5/appB1.py
+```
+
 ---
 
 ### 3. Kiểm thử API bằng `curl`
@@ -114,6 +130,12 @@ curl.exe --% -X PATCH http://localhost:5000/books/1 -H "Content-Type: applicatio
 
 # 6. Xóa sách
 curl.exe -i -X DELETE http://localhost:5000/books/1
+
+# 7. Phân trang Cursor nâng cao (Lab 5)
+curl.exe -s "http://localhost:5000/api/v1/books?limit=3"
+
+# 8. Sắp xếp đa khóa với bảo mật Whitelist (Lab 5)
+curl.exe -s "http://localhost:5000/api/v1/books?sort=-price,title&limit=4"
 ```
 
 ---
@@ -125,3 +147,5 @@ Mỗi thư mục lab đều đi kèm tài liệu hướng dẫn và bằng chứ
 - [Tài liệu và hình ảnh Lab 2 (B2)](./B2/README.md)
 - [Tài liệu và hình ảnh Lab 3 (B3)](./B3/README.md)
 - [Tài liệu và hình ảnh Lab 4 (B4)](./B4/README.md)
+- [Tài liệu và hình ảnh Lab 5 (B5)](./B5/README.md)
+

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Book",
+  "description": "JSON Schema representation for Book entity in Bookstore API",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "isbn",
+    "price_vnd",
+    "stock",
+    "category"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier of the book",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the book",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "isbn": {
+      "type": "string",
+      "description": "International Standard Book Number (ISBN)",
+      "pattern": "^(97(8|9))?\\d{9}(\\d|X)$"
+    },
+    "price_vnd": {
+      "type": "integer",
+      "description": "Price in Vietnamese Dong (VND)",
+      "minimum": 0
+    },
+    "stock": {
+      "type": "integer",
+      "description": "Remaining stock count in inventory",
+      "minimum": 0
+    },
+    "category": {
+      "type": "object",
+      "description": "Associated category",
+      "required": ["id", "name", "slug"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        }
+      }
+    },
+    "authors": {
+      "type": "array",
+      "description": "List of book authors",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
