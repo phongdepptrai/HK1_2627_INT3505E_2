@@ -40,11 +40,7 @@ HK1_2627_INT3505E_2/
 
 └── B5/                                # Lab 5: Phân trang nâng cao (Offset & Composite Cursor), Lọc & Sắp xếp đa khóa
     ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 5
-    ├── app.py                         # File khởi tạo Flask, SQLite DB, seed dữ liệu mẫu
-    ├── appB1.py                       # Entry point chạy ứng dụng (python B5/appB1.py)
-    ├── models.py                      # Mô hình cơ sở dữ liệu SQLAlchemy (Book, Author, Category, User, Review)
-    ├── routes/
-    │   └── books.py                   # Endpoint GET /api/v1/books hỗ trợ offset/cursor, filter, multi-key sort
+    ├── appB1.py                       # Toàn bộ mã nguồn ứng dụng Flask, models, phân trang & lọc/sắp xếp
     └── schemas/
         └── book.json                  # JSON Schema đặc tả thực thể Book (Draft 2020-12)
 ```

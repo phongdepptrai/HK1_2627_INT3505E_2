@@ -6,14 +6,10 @@ Thực hành lập trình Backend (Flask API) xử lý phân trang dữ liệu t
 
 ## 1. Bối cảnh & Cấu trúc Dự án Bookstore API
 
-Cấu trúc thư mục được tổ chức theo chuẩn yêu cầu:
+Cấu trúc thư mục được tối giản trong một file thực thi:
 ```text
 B5/
-├── app.py              # File khởi tạo Flask, cấu hình SQLite DB, seed dữ liệu mẫu
-├── appB1.py            # Entry point chạy tương thích theo format bài tập lab (python B5/appB1.py)
-├── models.py           # Mô hình cơ sở dữ liệu SQLAlchemy (Book, Author, Category, User, Review)
-├── routes/
-│   └── books.py        # Xử lý logic nghiệp vụ cho Endpoint GET /api/v1/books
+├── appB1.py            # Toàn bộ mã nguồn ứng dụng Flask, models SQLAlchemy, seed data, phân trang & lọc/sắp xếp
 └── schemas/
     └── book.json       # JSON Schema đặc tả thực thể Book (chuẩn Draft 2020-12)
 ```
@@ -75,8 +71,6 @@ B5/
 Từ thư mục gốc dự án:
 ```powershell
 python B5/appB1.py
-# hoặc
-python B5/app.py
 ```
 *Ghi chú*: Cơ sở dữ liệu SQLite và dữ liệu mẫu sẽ được tự động khởi tạo khi ứng dụng khởi chạy lần đầu.
 
