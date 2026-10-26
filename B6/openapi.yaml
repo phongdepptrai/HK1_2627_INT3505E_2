@@ -1,0 +1,223 @@
+openapi: 3.0.3
+info:
+  title: Social Network Auth API
+  version: 1.0.0
+  license:
+    name: MIT
+  description: OpenAPI 3.0 specification for Lab 6 (AuthN & AuthZ).
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticates user credentials and issues Access Token + Refresh Token.
+      operationId: login
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid username or password (AuthN failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      description: Exchanges a valid Refresh Token for a new Access Token.
+      operationId: refreshToken
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid, expired, or revoked refresh token (AuthN failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{id}:
+    get:
+      summary: Get post by ID
+      description: >
+        Retrieves post details. Requires Bearer Token with 'post:read' scope.
+        Validates: (1) AuthN token valid, (2) AuthZ scope, (3) Object-level ownership (BOLA).
+      operationId: getPostById
+      tags:
+        - Posts
+      security:
+        - BearerAuth:
+            - "post:read"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric ID of the post
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid post ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Missing, invalid, or expired token (AuthN failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient scope or forbidden private post (AuthZ / BOLA failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer JWT token in Authorization header
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: alice
+        password:
+          type: string
+          format: password
+          example: "123456"
+
+    LoginResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - refresh_token
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOi..."
+        token_type:
+          type: string
+          example: "Bearer"
+        expires_in:
+          type: integer
+          example: 900
+        refresh_token:
+          type: string
+          example: "def50200..."
+
+    RefreshRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+          example: "def50200..."
+
+    Post:
+      type: object
+      required:
+        - id
+        - author_id
+        - content
+        - visibility
+      properties:
+        id:
+          type: integer
+          example: 1
+        author_id:
+          type: integer
+          example: 10
+        content:
+          type: string
+          example: "Hello world!"
+        visibility:
+          type: string
+          enum: [public, private]
+          example: "public"
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-10-26T18:00:00Z"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: "Unauthorized"

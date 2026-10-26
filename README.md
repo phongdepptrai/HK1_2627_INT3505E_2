@@ -33,16 +33,20 @@ HK1_2627_INT3505E_2/
 │   ├── appB2.py                       # Bài 2: Error handler trả về application/problem+json
 │   └── appB3.py                       # Bài 3: Triển khai /orders có cursor pagination, filter, sort & sparse fieldsets
 │
-└── B4/                                # Lab 4: Đặc tả RESTful API với OpenAPI Specification (OAS 3.0)
-    ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 4
-    ├── appB1.yaml                     # Đặc tả chuẩn OpenAPI 3.0.3 cho Pet Store API
-    └── appB1.py                       # Bài 1: Cài đặt Flask API cho Pet Store chuẩn hóa theo OAS
-
-└── B5/                                # Lab 5: Phân trang nâng cao (Offset & Composite Cursor), Lọc & Sắp xếp đa khóa
-    ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 5
-    ├── appB1.py                       # Toàn bộ mã nguồn ứng dụng Flask, models, phân trang & lọc/sắp xếp
-    └── schemas/
-        └── book.json                  # JSON Schema đặc tả thực thể Book (Draft 2020-12)
+├── B4/                                # Lab 4: Đặc tả RESTful API với OpenAPI Specification (OAS 3.0)
+│   ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 4
+│   ├── appB1.yaml                     # Đặc tả chuẩn OpenAPI 3.0.3 cho Pet Store API
+│   └── appB1.py                       # Bài 1: Cài đặt Flask API cho Pet Store chuẩn hóa theo OAS
+│
+├── B5/                                # Lab 5: Phân trang nâng cao (Offset & Composite Cursor), Lọc & Sắp xếp đa khóa
+│   ├── README.md                      # Báo cáo chi tiết và ảnh minh họa Lab 5
+│   ├── appB1.py                       # Toàn bộ mã nguồn ứng dụng Flask, models, phân trang & lọc/sắp xếp
+│   └── schemas/
+│       └── book.json                  # JSON Schema đặc tả thực thể Book (Draft 2020-12)
+│
+└── B6/                                # Lab 6: Thiết kế Bảo mật & Phân quyền API (AuthN & AuthZ)
+    ├── openapi.yaml                   # Đặc tả OpenAPI 3.0.3 cho Login, Refresh, Post API (3 lớp kiểm soát quyền)
+    └── SecurityAudit.md               # Báo cáo rà soát 7 lỗ hổng bảo mật và rò rỉ dữ liệu (OWASP API Top 10)
 ```
 
 ---
@@ -56,6 +60,7 @@ HK1_2627_INT3505E_2/
 | [**B3**](./B3) | **Thiết kế API & Cursor Pagination** | Phân loại Collection / Item / Sub-resource, RFC 7807 (`problem+json`), Cursor pagination, Filter, Sort, Sparse fieldsets. | [Xem README Lab 3](./B3/README.md) |
 | [**B4**](./B4) | **Đặc tả OpenAPI & Pet Store API** | Chuẩn OpenAPI 3.0.3, Schema reuse (`$ref`), `operationId`, error handling, security (`bearerAuth`), pagination (`limit`, `x-next`), CRUD Pet Store. | [Xem README Lab 4](./B4/README.md) |
 | [**B5**](./B5) | **Phân trang nâng cao & Sắp xếp** | Song song Offset & Cursor (Composite), Lọc Category (`genre`), Multi-key Sorting, Whitelist bảo mật. | [Xem README Lab 5](./B5/README.md) |
+| [**B6**](./B6) | **Bảo mật & Phân quyền (AuthN/AuthZ)** | Tách biệt AuthN/AuthZ (`401` vs `403`), Access/Refresh Token Rotation, 3 lớp kiểm soát quyền chống BOLA, OpenAPI 3.0.3 spec, Security Audit 7 lỗ hổng (OWASP API Top 10). | [Xem Báo cáo Lab 6](./B6/SecurityAudit.md) |
 
 ---
 
