@@ -44,9 +44,20 @@ HK1_2627_INT3505E_2/
 │   └── schemas/
 │       └── book.json                  # JSON Schema đặc tả thực thể Book (Draft 2020-12)
 │
-└── B6/                                # Lab 6: Thiết kế Bảo mật & Phân quyền API (AuthN & AuthZ)
-    ├── openapi.yaml                   # Đặc tả OpenAPI 3.0.3 cho Login, Refresh, Post API (3 lớp kiểm soát quyền)
-    └── SecurityAudit.md               # Báo cáo rà soát 7 lỗ hổng bảo mật và rò rỉ dữ liệu (OWASP API Top 10)
+├── B6/                                # Lab 6: Thiết kế Bảo mật & Phân quyền API (AuthN & AuthZ)
+│   ├── openapi.yaml                   # Đặc tả OpenAPI 3.0.3 cho Login, Refresh, Post API (3 lớp kiểm soát quyền)
+│   └── SecurityAudit.md               # Báo cáo rà soát 7 lỗ hổng bảo mật và rò rỉ dữ liệu (OWASP API Top 10)
+│
+└── B7/                                # Lab 7: Dịch vụ Backend Flask tinh gọn (Product & Order API)
+    ├── README.md                      # Báo cáo chi tiết và 9 ảnh chụp minh chứng thực nghiệm Lab 7
+    ├── docker-compose.yml             # Cấu hình khởi chạy nhanh Docker Compose (PostgreSQL 16 + API)
+    └── product-api/                   # Toàn bộ mã nguồn dịch vụ Flask, models SQLAlchemy, schemas & tests
+        ├── Dockerfile                 # Đóng gói Multi-stage build Python 3.12-slim
+        ├── docker-compose.yml         # Compose dịch vụ DB + API
+        ├── requirements.txt           # Danh mục thư viện phụ thuộc tối giản
+        ├── wsgi.py                    # Điểm khởi chạy WSGI (Gunicorn / Flask)
+        ├── src/product_api/           # Mã nguồn ứng dụng (models, api route handlers, factory)
+        └── tests/                     # 12 ca kiểm thử tự động với Pytest (100% passed)
 ```
 
 ---
@@ -61,6 +72,7 @@ HK1_2627_INT3505E_2/
 | [**B4**](./B4) | **Đặc tả OpenAPI & Pet Store API** | Chuẩn OpenAPI 3.0.3, Schema reuse (`$ref`), `operationId`, error handling, security (`bearerAuth`), pagination (`limit`, `x-next`), CRUD Pet Store. | [Xem README Lab 4](./B4/README.md) |
 | [**B5**](./B5) | **Phân trang nâng cao & Sắp xếp** | Song song Offset & Cursor (Composite), Lọc Category (`genre`), Multi-key Sorting, Whitelist bảo mật. | [Xem README Lab 5](./B5/README.md) |
 | [**B6**](./B6) | **Bảo mật & Phân quyền (AuthN/AuthZ)** | Tách biệt AuthN/AuthZ (`401` vs `403`), Access/Refresh Token Rotation, 3 lớp kiểm soát quyền chống BOLA, OpenAPI 3.0.3 spec, Security Audit 7 lỗ hổng (OWASP API Top 10). | [Xem Báo cáo Lab 6](./B6/SecurityAudit.md) |
+| [**B7**](./B7) | **Dịch vụ Backend tinh gọn (Product & Order API)** | Kiến trúc KISS, SQLAlchemy 2.x, Marshmallow, Soft delete, Eager loading chống N+1, Liveness/Readiness probes (`/healthz`, `/ready`), Đóng gói Docker Compose + PostgreSQL. | [Xem README Lab 7](./B7/README.md) |
 
 ---
 
@@ -73,9 +85,9 @@ Mở PowerShell tại thư mục gốc của dự án:
 .\.venv\Scripts\Activate.ps1
 ```
 
-*(Nếu chưa cài thư viện Flask và Flask-SQLAlchemy):*
+*(Nếu chưa cài thư viện phụ thuộc):*
 ```powershell
-pip install Flask Flask-SQLAlchemy
+pip install -r B7/product-api/requirements.txt
 ```
 
 ---
@@ -105,6 +117,20 @@ python B4/appB1.py
 #### Chạy bài trong Lab 5:
 ```powershell
 python B5/appB1.py
+```
+
+#### Chạy bài trong Lab 7:
+```powershell
+# Cách 1: Sử dụng Docker Compose (Tự động thiết lập PostgreSQL 16 + Flask API):
+docker compose -f B7/docker-compose.yml up --build
+
+# Cách 2: Chạy trực tiếp Python local (SQLite):
+cd B7/product-api
+$env:PYTHONPATH="src"
+python wsgi.py
+
+# Chạy kiểm thử tự động Lab 7:
+python -m pytest B7/product-api/tests -v
 ```
 
 ---
@@ -137,6 +163,13 @@ curl.exe -s "http://localhost:5000/api/v1/books?limit=3"
 
 # 8. Sắp xếp đa khóa với bảo mật Whitelist (Lab 5)
 curl.exe -s "http://localhost:5000/api/v1/books?sort=-price,title&limit=4"
+
+# 9. Kiểm tra Health probes Lab 7
+curl.exe -i "http://localhost:5000/healthz"
+curl.exe -i "http://localhost:5000/ready"
+
+# 10. Tạo đơn hàng tự động tính tổng tiền và trừ tồn kho (Lab 7)
+curl.exe -i -X POST "http://localhost:5000/api/v1/orders" -H "Content-Type: application/json" -d "{\"customer_name\": \"Alice\", \"items\": [{\"product_id\": 1, \"quantity\": 2}]}"
 ```
 
 ---
@@ -149,4 +182,5 @@ Mỗi thư mục lab đều đi kèm tài liệu hướng dẫn và bằng chứ
 - [Tài liệu và hình ảnh Lab 3 (B3)](./B3/README.md)
 - [Tài liệu và hình ảnh Lab 4 (B4)](./B4/README.md)
 - [Tài liệu và hình ảnh Lab 5 (B5)](./B5/README.md)
-
+- [Báo cáo rà soát bảo mật Lab 6 (B6)](./B6/SecurityAudit.md)
+- [Tài liệu và hình ảnh Lab 7 (B7)](./B7/README.md)
