@@ -1,0 +1,60 @@
+extends:
+  - "spectral:oas"
+
+rules:
+  # Silence optional metadata warnings so clean specs report "No problems"
+  info-contact: off
+  info-description: off
+  operation-description: off
+  operation-tags: off
+  oas3-api-servers: off
+  oas3-unused-component: off
+
+  # Verify HTTP 204 responses do not declare a response body
+  no-204-response-body:
+    description: HTTP 204 No Content responses must not define a content body.
+    severity: error
+    given: "$.paths[*][*].responses['204']"
+    then:
+      field: content
+      function: undefined
+
+  # Verify Book.year matches the integer column type in models.py
+  book-year-integer:
+    description: Book.year must have type integer to match the SQLAlchemy model.
+    severity: error
+    given: "$.components.schemas.Book.properties.year"
+    then:
+      field: type
+      function: pattern
+      functionOptions:
+        match: "^integer$"
+
+  # Custom rule (Lab 2): Response 200 JSON schema must define > 0 fields (properties)
+  response-200-non-empty-schema:
+    description: Response 200 JSON schema must have more than 0 properties defined.
+    severity: error
+    given: "$.paths[*][*].responses['200'].content['application/json'].schema"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - type: object
+              required: [properties]
+              properties:
+                properties:
+                  type: object
+                  minProperties: 1
+            - type: object
+              required: [items]
+              properties:
+                type:
+                  const: array
+                items:
+                  type: object
+                  required: [properties]
+                  properties:
+                    properties:
+                      type: object
+                      minProperties: 1
